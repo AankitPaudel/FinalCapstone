@@ -1,23 +1,55 @@
 # Dependency directories
 node_modules/
 jspm_packages/
+venv/
+env/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+__pycache__/
+*.py[cod]
+*$py.class
 
 # Build outputs
 dist/
 build/
 out/
+*.so
+*.dylib
+*.dll
+*.exe
 
-# Environment variables
+# Environment variables and secrets
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+*.env
+.env.*
+.flaskenv
+config.js
+config.json
+*.pem
+*.key
+secrets.yaml
+secrets.yml
+credentials.json
+*_credentials.*
+*_keys.*
+*_secrets.*
+*_token.*
+.credentials/
+.secrets/
 
 # Debug logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+debug.log
+logs/
+*.log
 
 # Editor directories and files
 .idea/
@@ -27,6 +59,11 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw?
+.history/
+*.sublime-*
+.project
+.classpath
+.settings/
 
 # OS generated files
 .DS_Store
@@ -39,13 +76,44 @@ Thumbs.db
 
 # Testing
 coverage/
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+nosetests.xml
+junit-*.xml
+*.cover
+.hypothesis/
 
 # Temporary files
 *.log
 *.tmp
 *.temp
+*.swp
+*~
+\#*\#
 
 # Cache
 .cache/
 .npm/
-.eslintcache 
+.eslintcache
+.parcel-cache/
+.next/
+.nuxt/
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+.sass-cache/
+__pycache__/
+
+# Database
+*.sqlite3
+*.db
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Local Netlify folder
+.netlify 
