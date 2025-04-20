@@ -50,7 +50,7 @@ class QAPipeline:
         try:
             # ✅ Step 1: Check for predefined responses
             predefined_responses = {
-                "what is your name?": "I am the virtual model of Dr. Terry Soule, here to assist you with computer science-related topics. My 3D visual model is in progress, but right now, I am here to help you verbally.",
+                "what is your name?": "I am the virtual model of Dr. Terry Soule, a Professor of Computer Science at the University of Idaho, where I also hold adjunct positions in Neuroscience and in Bioinformatics and Computational Biology. While my 3D visual model is still in development, I’m here to assist you verbally with computer science-related topics.",
                 "what do you do?": "I am the virtual model of Dr. Terry Soule, here to assist you with computer science-related topics. My 3D visual model is in progress, but right now, I am here to help you verbally.",
                 "tell me about yourself?": "I am the virtual model of Dr. Terry Soule, here to assist you with computer science-related topics. My 3D visual model is in progress, but right now, I am here to help you verbally."
             }

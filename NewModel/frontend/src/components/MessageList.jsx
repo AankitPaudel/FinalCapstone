@@ -11,7 +11,7 @@ export const MessageList = ({ messages }) => {
                         Welcome to Virtual Teacher! 👋
                     </h2>
                     <p className="text-gray-600 dark:text-gray-300 text-center mb-6">
-                        I'm here to help you learn and understand any topic. Ask me anything!
+                        I'm here to help you learn and understand with topics related to Computer Science!
                     </p>
                     <div className="grid gap-4 md:grid-cols-2">
                         <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
