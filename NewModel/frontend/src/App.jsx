@@ -1,18 +1,39 @@
 // File: frontend/src/App.jsx
 import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ChatInterface } from './components/ChatInterface';
-import { AppContextProvider } from './context/AppContext';
-import { useAppContext } from './context/AppContext';
+import { AppContextProvider, useAppContext } from './context/AppContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import Login from './components/Login';
+import Register from './components/Register';
+import ForgotPassword from './components/ForgotPassword';
+import ResetPassword from './components/ResetPassword';
 import './styles/main.css';
+
+// Protected route component
+const ProtectedRoute = ({ children }) => {
+    const { user, loading } = useAuth();
+    
+    if (loading) {
+        return <div className="loading">Loading...</div>;
+    }
+    
+    if (!user) {
+        return <Navigate to="/login" />;
+    }
+    
+    return children;
+};
 
 function MainContent() {
     const { theme, language } = useAppContext();
     
     return (
         <div className={`app ${theme}`}>
-            
             <main className="app-main">
-                <ChatInterface />
+                <ProtectedRoute>
+                    <ChatInterface />
+                </ProtectedRoute>
             </main>
             <footer className="app-footer">
                 <p>© 2024 Virtual Teacher. All rights reserved.</p>
@@ -60,9 +81,20 @@ function LanguageSelector() {
 
 function App() {
     return (
-        <AppContextProvider>
-            <MainContent />
-        </AppContextProvider>
+        <Router>
+            <AppContextProvider>
+                <AuthProvider>
+                    <Routes>
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/register" element={<Register />} />
+                        <Route path="/forgot-password" element={<ForgotPassword />} />
+                        <Route path="/reset-password" element={<ResetPassword />} />
+                        <Route path="/" element={<MainContent />} />
+                        <Route path="*" element={<Navigate to="/" />} />
+                    </Routes>
+                </AuthProvider>
+            </AppContextProvider>
+        </Router>
     );
 }
 

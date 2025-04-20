@@ -44,6 +44,11 @@ export default defineConfig({
       '@': path.resolve(__dirname, 'src')
     }
   },
+  // Add publicDir configuration to include the picture folder
+  publicDir: [
+    'public',
+    'picture'
+  ],
   build: {
     outDir: 'dist',
     assetsDir: 'assets',

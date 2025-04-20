@@ -5,7 +5,7 @@ import logging
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from api.routes import audio, qa, lectures
+from api.routes import audio, qa, lectures, auth
 
 # Add the backend directory to Python path
 backend_dir = Path(__file__).parent.parent
@@ -47,6 +47,7 @@ app.mount(
 app.include_router(qa.router, prefix="/api/qa", tags=["qa"])
 app.include_router(audio.router, prefix="/api/audio", tags=["audio"])
 app.include_router(lectures.router, prefix="/api/lectures", tags=["lectures"])
+app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
 
 @app.get("/")
 async def root():

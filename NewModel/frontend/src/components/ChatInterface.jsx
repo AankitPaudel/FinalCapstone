@@ -6,8 +6,9 @@ import { ResponsePlayer } from './ResponsePlayer';
 import { LoadingIndicator } from './LoadingIndicator';
 import { MessageList } from './MessageList';
 import { TranscriptBubble } from './TranscriptBubble';
-import { Send, Settings, HelpCircle, Moon, Sun } from 'lucide-react';
+import { Send, Settings, HelpCircle, Moon, Sun, LogOut } from 'lucide-react';
 import { useTheme, useLanguage } from '../context/AppContext';
+import { useAuth } from '../context/AuthContext';
 
 export const ChatInterface = () => {
     const { messages, sendMessage, isLoading } = useChat();
@@ -21,6 +22,7 @@ export const ChatInterface = () => {
     const [showIntro, setShowIntro] = useState(false);
     const [isUserInitiated, setIsUserInitiated] = useState(false); // Track if user opened modal
     const videoRef = useRef(null);
+    const { logout } = useAuth(); // Add this to use logout function
 
     
     
@@ -129,16 +131,22 @@ setTranscript('');
                                 Settings
                             </button>
                             <button 
-        onClick={() => {
-            setShowIntro(true);
-            setIsUserInitiated(true); // User clicked, allow sound
-        }}
-        className="flex items-center w-full px-4 py-2 text-sm text-blue-600 dark:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg font-semibold"
-    >
-        <span className="mr-3">👋</span>
-        Get to Know Me
-    </button>
-
+                                onClick={() => {
+                                    setShowIntro(true);
+                                    setIsUserInitiated(true); // User clicked, allow sound
+                                }}
+                                className="flex items-center w-full px-4 py-2 text-sm text-blue-600 dark:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg font-semibold"
+                            >
+                                <span className="mr-3">👋</span>
+                                Get to Know Me
+                            </button>
+                            <button 
+                                onClick={logout}
+                                className="flex items-center w-full px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg font-semibold"
+                            >
+                                <LogOut className="w-5 h-5 mr-3" />
+                                Logout
+                            </button>
                         </nav>
                     </div>
 
