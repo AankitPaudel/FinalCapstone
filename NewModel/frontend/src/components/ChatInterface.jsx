@@ -21,6 +21,9 @@ export const ChatInterface = () => {
     const [showIntro, setShowIntro] = useState(false);
     const [isUserInitiated, setIsUserInitiated] = useState(false); // Track if user opened modal
     const videoRef = useRef(null);
+    const [showHelpDropdown, setShowHelpDropdown] = useState(false);
+    const [showDescriptionModal, setShowDescriptionModal] = useState(false);
+
 
     
     
@@ -64,10 +67,12 @@ useEffect(() => {
     const handleTextSubmit = async (e) => {
         e.preventDefault();
         if (inputText.trim()) {
-            await sendMessage({ type: 'text', content: inputText });
+            const message = inputText;
             setInputText('');
+            await sendMessage({ type: 'text', content: message });
         }
     };
+
 
     const handleTranscriptUpdate = (newTranscript) => {
         setTranscript(newTranscript);
@@ -120,10 +125,33 @@ setTranscript('');
 
                         {/* Nav Links */}
                         <nav className="px-6 space-y-2">
-                            <button className="flex items-center w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
-                                <HelpCircle className="w-5 h-5 mr-3" />
-                                Help & FAQs
-                            </button>
+                            
+                            {/* Help & FAQs Dropdown Toggle */}
+<div className="relative">
+    <button 
+        onClick={() => setShowHelpDropdown(prev => !prev)}
+        className="flex items-center w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"
+    >
+        <HelpCircle className="w-5 h-5 mr-3" />
+        Help & FAQs
+    </button>
+
+    {showHelpDropdown && (
+        <div className="ml-6 mt-2">
+            <button 
+                onClick={() => setShowDescriptionModal(true)}
+                className="flex items-center w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"
+            >
+                📖 Wanna Know How This Works?
+            </button>
+        </div>
+    )}
+</div>
+
+
+
+
+
                             <button className="flex items-center w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
                                 <Settings className="w-5 h-5 mr-3" />
                                 Settings
@@ -133,9 +161,9 @@ setTranscript('');
             setShowIntro(true);
             setIsUserInitiated(true); // User clicked, allow sound
         }}
-        className="flex items-center w-full px-4 py-2 text-sm text-blue-600 dark:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg font-semibold"
-    >
-        <span className="mr-3">👋</span>
+        className="flex items-center w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"
+>
+        <span className="mr-3">📚</span>
         Get to Know Me
     </button>
 
@@ -177,16 +205,25 @@ setTranscript('');
                     <div className="max-w-4xl mx-auto">
                         <form onSubmit={handleTextSubmit} className="flex items-end space-x-4">
                             <div className="flex-1 relative">
-                                <textarea
-                                    ref={inputRef}
-                                    value={inputText}
-                                    onChange={(e) => setInputText(e.target.value)}
-                                    placeholder="Ask me anything..."
-                                    rows="1"
-                                    disabled={isRecording}
-                                    className="w-full p-4 text-base text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none disabled:opacity-50"
-                                    style={{ minHeight: '60px', maxHeight: '200px' }}
-                                />
+                            <textarea
+    ref={inputRef}
+    value={inputText}
+    onChange={(e) => setInputText(e.target.value)}
+    onKeyDown={(e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault(); // Prevent newline
+            if (inputText.trim()) {
+                handleTextSubmit(e); // Call your existing submit handler
+            }
+        }
+    }}
+    placeholder="Ask me anything..."
+    rows="1"
+    disabled={isRecording}
+    className="w-full p-4 text-base text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none disabled:opacity-50"
+    style={{ minHeight: '60px', maxHeight: '200px' }}
+/>
+
                             </div>
 
                             <div className="flex items-center space-x-2">
@@ -257,6 +294,32 @@ setTranscript('');
             </div>
         </div>
     )}
+
+
+{showDescriptionModal && (
+    <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
+        <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg w-11/12 md:w-2/3 lg:w-1/2 p-6">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
+                💡 How This Works
+            </h2>
+            <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
+                This virtual professor is designed to help you with computer science topics. 
+                You can ask questions using voice or text. The AI listens, understands, and responds 
+                with detailed answers. It also uses speech-to-text, language models, and even reads 
+                your voice input dynamically to generate real-time replies. Just press the mic or type your question!
+            </p>
+            <div className="flex justify-end mt-4">
+                <button
+                    onClick={() => setShowDescriptionModal(false)}
+                    className="text-sm text-blue-600 hover:underline"
+                >
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+)}
+
 
 
         </div>
