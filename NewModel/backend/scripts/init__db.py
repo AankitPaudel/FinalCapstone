@@ -7,14 +7,18 @@ from pathlib import Path
 backend_dir = str(Path(__file__).parent.parent.absolute())
 sys.path.append(backend_dir)
 
-from database.models.lecture import Base
+from sqlalchemy.ext.declarative import declarative_base
 from database.session import engine, SessionLocal
 from database.models.lecture import Lecture
+from database.models.user import User, Base as UserBase
+from database.models.lecture import Base as LectureBase
 
 def init_database():
     try:
         print("Creating database tables...")
-        Base.metadata.create_all(bind=engine)
+        # Create all tables
+        LectureBase.metadata.create_all(bind=engine)
+        UserBase.metadata.create_all(bind=engine)
         print("✓ Database tables created successfully!")
 
         # Test database by adding a sample lecture
