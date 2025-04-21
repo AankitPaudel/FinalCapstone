@@ -1,0 +1,36 @@
+Hello, my name is Terry Soule, and this is Programming Chaos, a channel devoted to programming projects to help you improve your programming skills. Today’s topic is Lindenmayer Systems, also known as L-Systems. They are used to generate all sorts of interesting graphical structures. The basic idea of simple L-Systems is to use rewrite rules to draw complicated, usually fractal, images like the ones we see here.
+
+To begin with, to understand how L-Systems work, we need to understand a little bit about grammars. The way we define an L-System is by defining a grammar, which is the set of rules that generate these images or systems. As you may have noticed from the introduction, the basic idea is rewrite rules. For example, we start with a line and replace it with this "top hat" shape. For each line in the top hat—for instance, the red line here—we replace it with its own top hat shape. Similarly, the green line becomes a smaller top hat. By repeatedly applying these rewrite rules, we create increasingly complex shapes.
+
+What we need is a formal way to define these rewrite rules, and that’s where the concept of a grammar comes in. Similar to a grammar for a language, it defines what constitutes a valid sentence in the language or a valid image. Every grammar begins with a start symbol, which is typically represented by 'S.' Variables, usually represented by capital letters, are associated with the grammar. The start symbol itself is a variable, and we can have other variables that are parts of the grammar to be rewritten.
+
+In addition to variables, we also have constants, or terminals, which are usually represented as lowercase letters. These constants are not replaced and become part of the final figure. For example, I am using 'L' and 'R' here to represent left turns and right turns. To define a shape like this top hat, we use left, right, and forward operations, where forward operations are replaced during the rewriting process.
+
+The fourth component of a grammar is the replacement rules. For instance, if the start symbol is 'S,' we might replace it with a forward symbol ('F') and a right turn ('R'). Similarly, if we have a forward symbol, it could be replaced with another forward, a right, and another forward. Using these rules, we generate longer and longer strings.
+
+As an example, starting with 'S,' we replace it with 'F.' Then, this 'F' is replaced according to the rules with 'FRF.' Each subsequent replacement expands the string. The constants, such as 'R,' remain unchanged as they are not rewritten. These strings can then be translated into images. It’s worth noting that these specific rules won’t generate the exact top hat image shown earlier; more complex rules are required.
+
+Grammars are fundamental to computer science, as they are used to define programming languages. When you encounter a syntax error in code, such as a missing semicolon or unmatched curly bracket, it means you’ve violated the grammar’s rules. Though grammar is a vast topic with entire courses devoted to it, we’ll only touch on the basics necessary to apply it to L-Systems and create cool images.
+
+With this understanding, let’s start programming. The two main tasks will involve using the rules to expand a string and translating that string into an image.
+
+To begin, we need an "expand" function. This function takes a string and applies the grammar rules to generate a new, expanded string. First, we define the start symbol as 'S' and pass it into the expand function. The function initializes an empty string and then iterates through each character in the input string, applying the appropriate rule and appending the expanded result to the new string.
+
+For each character in the input, we use a loop to apply the corresponding grammar rule. A switch statement is used to handle each character. For instance, if the character is 'S,' we replace it with 'F.' Similarly, for 'F,' we replace it with a longer sequence of characters like 'FRF.' Constants, such as 'L' and 'R,' are handled by a default case that appends them unchanged to the new string. The formal rules of the grammar can be represented as comments in the code for clarity.
+
+Once the expand function is implemented, we test it by expanding the start string a few times and printing the results. By observing the output, we can verify that the rules are being applied correctly.
+
+The next step is to turn the expanded string into an image. This process is similar to the expand function, except that instead of applying rewrite rules, we apply drawing commands. For example, 'F' represents moving forward, 'L' represents turning left, and 'R' represents turning right. These drawing instructions correspond to the structure we want to create.
+
+To facilitate drawing, we use a "push matrix" and "pop matrix" to reorient the coordinate system on the screen. Starting near the bottom of the screen, we iterate over the expanded string, executing drawing commands for each character. For 'F,' we draw a line and translate to its endpoint. For 'L' and 'R,' we rotate left or right by a specified angle. Unrecognized symbols are ignored.
+
+The angle and line length are defined as variables. For example, a right angle is set to π/2, and the line length is initialized to a small value. To visualize the iterative process, we slow the frame rate and increase the number of iterations. As the rules are applied repeatedly, the image grows in complexity, forming fractal-like shapes such as the top hat shown earlier.
+
+This approach demonstrates how L-Systems can be implemented to generate intricate graphical patterns using simple rewrite rules and basic drawing commands.
+
+
+
+
+
+
+

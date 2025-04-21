@@ -8,7 +8,7 @@ export const TypingIndicator = () => {
                 <img 
                     src="/images/professor.png" 
                     alt="Bot avatar" 
-                    className="w-8 h-8 rounded-full border-2 border-blue-500 object-cover" 
+                    className="w-8 h-8 object-contain" 
                 />
             </div>
             <div className="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-100 px-4 py-2 rounded-2xl text-sm">

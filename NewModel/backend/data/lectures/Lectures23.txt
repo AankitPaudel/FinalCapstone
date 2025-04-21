@@ -1,0 +1,321 @@
+Hi, I'm Terry Soule, and this is Programming Chaos, a channel devoted to fun programming projects to help you hone your programming skills. Today’s project is the Mandelbrot set, a classic from computer art and graphics. This is an example of the Mandelbrot set—a beautiful fractal, colorful pattern that we want to be able to produce. In order to do that, we need to understand the math behind it because, mathematically speaking, this is literally a set. It’s a set of numbers with a specific definition and then some colors added for fun.
+
+I'm going to begin, unfortunately, not with the coding but with the math behind the coding: how we define the Mandelbrot set. The Mandelbrot set, formally, is defined as the set of complex numbers which, when you apply this recurrence relationship, does not diverge (does not head out towards infinity). The recurrence relationship is fairly simple: the next value in the series, the i+1 value, is whatever the previous value was squared, and we add our starting value (our constant value). We reiterate this process over and over again to see if it diverges.
+
+If you want to think about it step-by-step:
+
+𝑍
+0
+Z 
+0
+​
+  is the complex number 
+𝑐
+c we’re interested in.
+𝑍
+1
+Z 
+1
+​
+  is then 
+𝑍
+0
+2
++
+𝑐
+Z 
+0
+2
+​
+ +c.
+𝑍
+2
+Z 
+2
+​
+  is 
+𝑍
+1
+2
++
+𝑐
+Z 
+1
+2
+​
+ +c, and so forth.
+If we were to do this with real numbers, the process would be fairly straightforward. For example, if we started with 
+𝑐
+=
+1
+c=1:
+
+𝑍
+0
+=
+1
+Z 
+0
+​
+ =1, 
+𝑍
+1
+=
+1
+2
++
+1
+=
+2
+Z 
+1
+​
+ =1 
+2
+ +1=2,
+𝑍
+2
+=
+2
+2
++
+1
+=
+5
+Z 
+2
+​
+ =2 
+2
+ +1=5, and so on.
+Clearly, this heads off towards infinity and would not be a part of our set.
+
+On the other hand, if we started with 
+𝑐
+=
+0
+c=0:
+
+𝑍
+0
+=
+0
+Z 
+0
+​
+ =0, 
+𝑍
+1
+=
+0
+2
++
+0
+=
+0
+Z 
+1
+​
+ =0 
+2
+ +0=0,
+𝑍
+2
+=
+0
+2
++
+0
+=
+0
+Z 
+2
+​
+ =0 
+2
+ +0=0, and so on.
+We’d stay at zero. Our number wouldn’t diverge.
+
+In general, for real numbers, this sort of recurrence relationship is not very interesting. Where it becomes interesting is when we’re dealing with complex numbers.
+
+A complex number has two parts: a real part and an imaginary part. The imaginary part is written out as a regular number multiplied by the square root of -1. If you think about it, the square root of -1 can’t exist, but mathematicians decided, "We don’t care," and they pretended it exists. They called it 
+𝑖
+i and referred to these as imaginary numbers. It turns out that imaginary numbers are super useful, and you can do all sorts of interesting things with them, including creating the Mandelbrot set.
+
+The way imaginary numbers are often represented is in the complex plane. We have our complex number 
+𝑐
+c, with a real part (
+𝑎
+a) and an imaginary part (
+𝑏
+b). In the complex plane, the x-axis represents the real part, and the y-axis represents the imaginary part. For example, if we have a complex number 
+𝑎
++
+𝑏
+𝑖
+a+bi:
+
+The real part (
+𝑎
+a) determines the x-coordinate.
+The imaginary part (
+𝑏
+b) determines the y-coordinate.
+This gives us a point in the complex plane.
+
+In terms of the Mandelbrot set, this is our starting value 
+𝑐
+c. We apply the recurrence relationship, which gives us a new number. This new number corresponds to another point in the plane. It may eventually head off to infinity, in which case it’s not part of the set.
+
+For a different value of 
+𝑐
+c, it might head toward zero, meaning it doesn’t diverge and is part of the set. Other behaviors include oscillation (which doesn’t diverge and is part of the set) or chaotic movement around the plane.
+
+The key idea is to check whether each point stays constrained or goes off to infinity. We color the points appropriately.
+
+To simplify this process, we use a rule: if a point ever moves outside a circle with a radius of 2, it will eventually diverge. This saves us from iterating infinitely. For each point, we compute 
+𝑎
+2
++
+𝑏
+2
+a 
+2
+ +b 
+2
+  (the square of the distance from the origin) to check if it’s greater than 4 (the square of the radius). If it is, we know it will diverge.
+
+If the point remains within the circle, we don’t know its final behavior and must continue iterating.
+
+To calculate 
+𝑍
+2
+Z 
+2
+ , where 
+𝑍
+=
+𝑎
++
+𝑏
+𝑖
+Z=a+bi:
+
+Multiply it by itself like a polynomial: 
+(
+𝑎
++
+𝑏
+𝑖
+)
+⋅
+(
+𝑎
++
+𝑏
+𝑖
+)
+(a+bi)⋅(a+bi).
+This results in 
+𝑎
+2
+−
+𝑏
+2
++
+2
+𝑎
+𝑏
+𝑖
+a 
+2
+ −b 
+2
+ +2abi.
+Here:
+
+The real part is 
+𝑎
+2
+−
+𝑏
+2
+a 
+2
+ −b 
+2
+ .
+The imaginary part is 
+2
+𝑎
+𝑏
+2ab.
+In code, since we don’t have a built-in complex number type, we track 
+𝑎
+a and 
+𝑏
+b as separate variables.
+
+Now, with the math out of the way, we can start coding.
+
+First, we set up a small window because calculating the Mandelbrot set is slow. For each pixel, we need to go through this iterative process to determine if it’s part of the set. A smaller window means fewer loops and faster processing.
+
+I’ve set the color mode to Hue-Saturation-Brightness (HSB). For the hue, I use a full 360-degree color wheel, with saturation and brightness varying from 0 to 100. Since we’re drawing individual pixels, there’s no need for a stroke.
+
+We create nested loops to iterate over each pixel. Each pixel corresponds to an 
+𝑥
+,
+𝑦
+x,y coordinate in our window. However, the Mandelbrot set is only interesting in the range 
+[
+−
+2
+,
+2
+]
+[−2,2], so we map the pixel coordinates to this range using the map() function.
+
+Next, we write a function to calculate whether a pixel belongs to the Mandelbrot set. The function takes two arguments (
+𝑥
+,
+𝑦
+x,y) and interprets them as the real (
+𝑎
+a) and imaginary (
+𝑏
+b) parts of the complex number 
+𝑐
+c. We initialize 
+𝑍
+0
+=
+𝑐
+Z 
+0
+​
+ =c and iteratively apply the recurrence relationship:
+
+𝑍
+𝑛
++
+1
+=
+𝑍
+𝑛
+2
++
+𝑐
+Z 
+n+1
+​
+ =Z 
+n
+2
+​
+ +c.
+We loop until either the distance exceeds 2 (meaning the point will diverge) or we’ve iterated a maximum number of times.
+
+The output is a color based on the number of iterations before divergence. Points that don’t diverge are colored black, while those that do are assigned colors based on how quickly they diverge.
+
+Finally, we display the resulting fractal image, which visualizes the Mandelbrot set in all its colorful glory.
+

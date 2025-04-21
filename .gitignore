@@ -41,4 +41,35 @@ yarn-error.log*
 venv/
 env/
 .venv/
-ENV/ 
+ENV/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Keep all lecture files
+!data/lectures/
+!data/lectures/*.txt
+
+# Node.js
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+.pnpm-debug.log
+
+# Audio files - but keep the directory structure
+data/audio/responses/*.mp3
+!data/audio/responses/.gitkeep
+
+# Vector store - keep directory structure
+data/vector_store/*
+!data/vector_store/.gitkeep
+
+# VS Code
+.vscode/
+
+# Windows
+Desktop.ini 

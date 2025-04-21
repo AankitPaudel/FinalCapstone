@@ -1,9 +1,7 @@
 from sqlalchemy import Column, String, Boolean, DateTime
-from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime
 import uuid
-
-Base = declarative_base()
+from .base import Base
 
 class User(Base):
     __tablename__ = "users"

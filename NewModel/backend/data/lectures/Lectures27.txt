@@ -1,0 +1,53 @@
+Welcome! My name is Terry Soule, and this is Programming Chaos, a channel devoted to fun and interesting programming projects to help you hone your programming skills. Today's project is a one-dimensional cellular automaton, which you can see here creating all sorts of interesting colorful patterns. There's an infinite amount of variety that you can create with it, making it great for generating different procedurally generated textures.
+
+The basic idea here, which you can sort of see with larger cells, is that we have a row of cells, each in a particular state, represented by its color. Then we have update rules, so a given cell will change its state based on its current state and its neighboring states. This is a cellular automaton, similar to Conway's Game of Life, which is a two-dimensional cellular automaton. I have a video on that linked here. This is a one-dimensional cellular automaton, so we have just a single row of states that keeps updating. But to make these patterns interesting, when we update a row, we draw the new row below it, and each new row represents the next set of states. That’s how we get these interesting patterns.
+
+Before we start programming, let’s take a closer look at the details. Here, I have a row of cells in different states—state 0, state 1, and state 2, with state 0 being white, state 1 being black, and state 2 being another color. These states are arbitrary but standard for computer programming, where zeros and ones are often used. Now, the question is: how do I update these states? The update depends both on its current state and at least some of its neighboring states. For now, let's say the neighboring states are the ones to the left and right.
+
+We need a rule set. For example, let’s consider a state of 0, 1, 0. This becomes 0, which means in the next time step, this state will become 0 based on its neighbors. Then we can look at another state, say, 1, 1, 1, which becomes 1. For the state 0, 1, 1, that becomes 0. That’s all you do to update the states: look up the current state and its neighbors, and see what it should be replaced with.
+
+For the edge cases, where there’s no neighbor, we have a couple of options. One option is to assume a default value like zero for the neighbors, but that could result in weird artifacts. A more common approach is to treat the edges as wrapped around, so the neighbor for the last state would be the first state, and vice versa.
+
+For a basic two-state cellular automaton, the rules are defined with a neighborhood size of one on each side, and these rules can be named. For example, if we start with a row of 1, 1, 1 and consider the rule 0, 1, 1, 1, 0, we can convert that to a binary number and refer to it as Rule 114.
+
+We’re not limited to just two states; we could have more states, say, three or four states, with different colors for each. We’re also not limited to a neighborhood size of one. For example, if I choose a neighborhood size of two, the number of rules grows exponentially. The formula for the total number of rules is 
+𝑁
+(
+2
+𝑁
++
+1
+)
+N 
+(2N+1)
+ , where 
+𝑁
+N is the number of states and 
+2
+𝑁
++
+1
+2N+1 represents the neighborhood size.
+
+In terms of programming, I need to know the size of the neighborhood, how many states I want, and then I need to define my rules. I’ll randomly generate the rules for this program, but you can program specific rules if you want. The rules are like a dictionary or a hashmap, where each rule maps a string of states to a new state. For example, I can randomly assign new states to each possible permutation of states.
+
+Let’s start with the programming. I have my boilerplate code for setup and draw functions, which we almost always need when using processing. The first thing I need is the set of characters representing the states of my cells. Then I’ll decide how big each cell is when drawing it on the screen. I'll start with a cell size of 4. I’ll also define how many states I want in the model, starting with 3 states for now, and the neighborhood size, which I’ll start with one. This means there’s one neighbor on each side.
+
+Next, I'll calculate the row width, which is the width of the window divided by the cell size. Then, I’ll create a row as an array of characters, as long as the row width. I’ll populate this row with random states. I will display this row on the screen to check if it works, but it won’t be interesting yet because we haven't implemented the update function.
+
+To display the row, I’ll pick a fill color based on the state of each cell, subtracting 48 to map it to an integer value. Then, I’ll draw rectangles for each state, using HSB color mode, where 360 represents the hue, and saturation and brightness are set to their maximum.
+
+Now, we need to define the update rules. For that, I’ll use a hashmap to map a string to a character. The string will represent a set of neighboring states, and the character will represent the new state. I’ll generate the rules randomly by recursively creating all possible permutations of states (from 000 to 222, since we have three states).
+
+As I generate the rules, I’ll randomly assign a new state to each permutation, which I will add to my hashmap. For example, the state 000 might be mapped to state 2. Once I have all the permutations, I’ll have my complete rule set, and we can use it to update the states in the rows.
+
+Next, I’ll generate a recursive function that builds the rule set by going through all possible state combinations and adding random new states to each. Once the length of the rule is zero, I’ll know that I’ve finished generating the rule for that set of states.
+
+With that, we’ll have a full implementation of the cellular automaton, which will create colorful patterns based on the random rule set.
+
+
+
+
+
+
+

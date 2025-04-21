@@ -16,6 +16,9 @@ export const AuthProvider = ({ children }) => {
         const checkLoggedIn = async () => {
             try {
                 const token = localStorage.getItem('token');
+                // DEBUGGING: Uncomment the next line to bypass login (white screen debugging)
+                // const token = "debug_token"; 
+                
                 if (!token) {
                     setLoading(false);
                     return;
@@ -23,7 +26,27 @@ export const AuthProvider = ({ children }) => {
                 
                 // We would normally verify the token with the server here
                 // For now, we'll just assume it's valid
-                const userData = JSON.parse(localStorage.getItem('user'));
+                const userData = JSON.parse(localStorage.getItem('user')) || { 
+                    studentId: 'debug_user',
+                    // Initialize with empty profile to prevent undefined errors
+                    profile: {
+                        full_name: '',
+                        email: '',
+                        department: '',
+                        major: ''
+                    }
+                };
+                
+                // Make sure profile exists to prevent errors
+                if (!userData.profile) {
+                    userData.profile = {
+                        full_name: '',
+                        email: '',
+                        department: '',
+                        major: ''
+                    };
+                }
+                
                 setUser(userData);
             } catch (err) {
                 console.error('Error checking auth status:', err);
@@ -36,6 +59,30 @@ export const AuthProvider = ({ children }) => {
         
         checkLoggedIn();
     }, []);
+    
+    // DEBUGGING FUNCTION - Use this to force login for testing
+    const debugLogin = () => {
+        const debugToken = "debug_token_12345";
+        const debugUser = {
+            studentId: "debug_student",
+            email: "debug@example.com",
+            // Add profile to prevent undefined errors
+            profile: {
+                full_name: 'Debug User',
+                email: 'debug@example.com',
+                department: 'Computer Science',
+                major: 'Software Engineering'
+            }
+        };
+        
+        localStorage.setItem('token', debugToken);
+        localStorage.setItem('user', JSON.stringify(debugUser));
+        setUser(debugUser);
+        navigate('/');
+        
+        console.log("DEBUG: Logged in with test user");
+        return true;
+    };
     
     // Register a new user
     const register = async (email, studentId, collegeId, password) => {
@@ -80,6 +127,9 @@ export const AuthProvider = ({ children }) => {
             setLoading(true);
             setError(null);
             
+            // DEBUGGING OPTION - Uncomment to bypass real login
+            // return debugLogin();
+            
             // Prepare form data for OAuth2 password flow
             const formData = new URLSearchParams();
             formData.append('username', studentId);  // FastAPI expects 'username' field
@@ -106,7 +156,13 @@ export const AuthProvider = ({ children }) => {
             // In a real app, you'd likely fetch the full user profile here
             const userObj = {
                 studentId,
-                // Additional user info could be added here
+                // Add empty profile to prevent undefined errors
+                profile: {
+                    full_name: '',
+                    email: '',
+                    department: '',
+                    major: ''
+                }
             };
             
             localStorage.setItem('user', JSON.stringify(userObj));
@@ -236,6 +292,7 @@ export const AuthProvider = ({ children }) => {
         requestPasswordReset,
         resetPassword,
         requestCollegeId,
+        debugLogin, // Include the debug function
     };
     
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

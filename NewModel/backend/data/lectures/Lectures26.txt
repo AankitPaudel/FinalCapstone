@@ -1,0 +1,33 @@
+Welcome! I'm Terry Sol, and this is Programming Chaos, a channel devoted to fun and interesting programming projects to help you hone your programming skills. For today's project, as you may have guessed, I want to be programming cloaks of invisibility. What I have here is a nice cloak, and when I put it on, I disappear. As you can see, though, I’m not actually holding a cloak of invisibility, but a piece of green fabric.
+
+The idea behind this project is a variation of standard green screen technology. We capture camera images and write a bit of code that decides whether to show the actual image or, if it detects green pixels, to show the background instead. So, while I don’t have an invisibility cloak, I have a cloak of transparency, which, in a sense, has the same effect. If you're transparent, you're effectively invisible.
+
+Let’s get started! I’ll be doing this project in Processing, which is an environment for programming in Java. The first thing we need, and this applies regardless of the language you’re using, is a library to handle video because we’ll be capturing video from my webcam. In Processing, this is quite easy. We go under “Tools” and manage tools, open the window, go to libraries, and you’ll find a video library. I’m using Processing 4, so it's already installed, but if you don’t have it, you’ll need to hit the install button and wait for it to install.
+
+Regardless of your language, you’ll probably need to install some sort of video-processing library. Once the library is loaded, we need to import it into our program, and then we need a video object to do the capturing. The class name we’re using is “Capture,” and I’ll call my object “video.”
+
+We also need to track the background image to achieve the transparency effect. Instead of using an image, I’ll use an array of pixels because it's much easier to access quickly. It’s essentially an array of integers, each representing a pixel. This array will store the background pixels, and it’s important to know the total number of pixels, which depends on your screen size. I’ve already set my window size, so I can proceed with initializing my video object.
+
+Let’s initialize the video object with the appropriate settings. I'll set it to capture video at the width and height of the window. This gives me a relatively high-performance video capture, although you can capture a larger frame if your system can handle it.
+
+Next, we need to create a list of available cameras. Since I have several cameras, I’ll know ahead of time that I want to use camera number two, which is actually my third camera. To make it easier, I’ll print out the available cameras, and then you can decide which one to use. Once we have that, we can determine the number of pixels we need, which is simply the width multiplied by the height of the video capture.
+
+Once I know how many pixels I need, I can create the background array. The background array will be initialized with the number of pixels required. After this, we need to start the video capture, which will set up the camera. Now, I want to be able to write to my window, but drawing a single point at a time tends to be slow. Instead, we write to the pixel array in memory and then display that to the window. This is much faster.
+
+We’ll do this by calling the “loadPixels” function, which gives us access to the pixel array that represents the content shown in the window. Essentially, we’re directly manipulating the window rather than calling separate functions to update the display, which makes everything run much faster.
+
+Next, let’s get to the “draw” function. The first thing we’ll do is check if the video is available for use. Once it is, we can capture a new frame and get its pixel data. We load the pixels of the captured video frame and then grab the current color of the pixel. For each pixel, I’ll break it down into its red, green, and blue components.
+
+To achieve the green screen effect, I compare the amount of green to the combined amounts of red and blue. If the green component is significantly larger than the others, I’ll treat it as part of the green screen. In this case, I’ll replace the pixel with the background color. Otherwise, I’ll use the current pixel color.
+
+To decide whether a pixel is green enough, I look at whether the green component is more than the combined red and blue components divided by a factor of 1.5. I also make sure there’s a reasonable amount of green, not just pure black. If this condition is met, I replace the pixel with the background. If it’s not, I keep the current pixel color.
+
+Once the loop has processed all the pixels, I call “updatePixels” to display the updated array of pixels in the window.
+
+Now, we need to capture the background. I’ll capture it when a key is pressed. The process is the same as for the video, where I load the pixels from the video frame and copy them into the background array. This ensures that when I put the green fabric in front of me, everything that is green will be replaced by the background.
+
+Now, I’ll test it. The window is initializing and detecting the available cameras. I’ve chosen the third one, and since I haven’t captured the background yet, it’s displaying the raw video frames. Let me step out of the way to capture the background. After capturing the background, the green fabric works as expected: it’s replaced with the background, making me appear invisible. 
+
+However, since my chair was in view during the capture, it remains visible in the background. This highlights a limitation: if things in the background are moving, the program will need to adjust. To fix this, you can press a key again to recapture the background when necessary.
+
+That’s the basic setup for a cloak of transparency using green screen technology.

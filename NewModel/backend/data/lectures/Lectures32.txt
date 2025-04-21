@@ -1,0 +1,54 @@
+Virtual Teacher Application: Development and Team Information
+
+Title: About the Virtual Teacher Application
+Date: May 2024
+
+This document provides information about the Virtual Teacher application, its development, and the team behind it.
+
+## Application Overview
+
+The Virtual Teacher is an AI-powered educational assistant designed to help students with computer science topics. It features both voice and text interactions, allowing students to ask questions and receive detailed explanations on various programming and computer science concepts.
+
+## Development Team
+
+This application was created by:
+- Ankit Paudel
+- Sohan Lama
+- Shubham Gupta
+
+The team developed this application as their capstone project at the University of Idaho, under the guidance of:
+- Client: Dr. Terry Soule (University of Idaho)
+- Instructor: Bruce Bolden
+- Team/Project Instructor: Bruce Bolden
+
+## Technical Details
+
+The Virtual Teacher application combines several cutting-edge technologies:
+
+1. **Frontend Development**:
+   - Modern React.js with hooks and context for state management
+   - Tailwind CSS for responsive and elegant UI design
+   - Speech-to-text for voice input processing
+   - Interactive chat interface with real-time feedback
+
+2. **Backend Infrastructure**:
+   - FastAPI for high-performance API endpoints
+   - RAG (Retrieval-Augmented Generation) system for accurate answers
+   - Vector database for efficient knowledge retrieval
+   - OpenAI integration for natural language understanding
+
+3. **Special Features**:
+   - Voice recognition with automatic silence detection
+   - Text-to-speech capabilities for audio responses
+   - Personalized student profiles
+   - Feedback collection system
+
+## Project Purpose
+
+This application was developed as a capstone project to demonstrate the practical application of AI technologies in education. The goal was to create an intelligent teaching assistant that could provide students with immediate, accurate responses to their computer science questions, thereby enhancing the learning experience outside of regular classroom hours.
+
+The team worked closely with Dr. Terry Soule to ensure the application met the pedagogical needs of computer science students and adhered to educational best practices.
+
+## Recognition
+
+The Virtual Teacher application represents the culmination of the team's academic journey at the University of Idaho, showcasing their skills in software development, AI integration, and user experience design. The project stands as a testament to the collaborative effort between the development team, their client Dr. Terry Soule, and their instructor Bruce Bolden. 

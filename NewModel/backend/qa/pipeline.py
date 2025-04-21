@@ -1,12 +1,15 @@
 # File: backend/qa/pipeline.py
-from typing import Dict, Optional
-from langchain.chat_models import ChatOpenAI
-from langchain.schema import SystemMessage, HumanMessage, AIMessage
+from typing import Dict, Optional, List, Tuple
+from langchain_openai import ChatOpenAI
+from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
 from app.config import settings
 from rag.processor import RAGProcessor
 from audio.text_to_speech import TextToSpeech
 from pathlib import Path
 import logging
+import os
+import re
+from .prompts import ANSWER_TEMPLATE
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -28,6 +31,7 @@ class QAPipeline:
             self.text_to_speech = TextToSpeech()
             
             # Initialize OpenAI LLM
+            # Using updated configuration for newer OpenAI client
             self.llm = ChatOpenAI(
                 model_name="gpt-3.5-turbo",
                 temperature=0.3,
@@ -43,6 +47,27 @@ class QAPipeline:
             logger.error(f"Error initializing QA Pipeline: {str(e)}")
             raise
 
+    def _extract_code_blocks(self, text: str) -> Tuple[str, List[str]]:
+        """
+        Extract code blocks from text and prepare a speech-friendly version.
+        Returns a tuple of (speech_text, original_text).
+        """
+        # Pattern to match code blocks
+        pattern = r"```[\w]*\n(.*?)```"
+        
+        # Find all code blocks
+        code_blocks = re.findall(pattern, text, re.DOTALL)
+        
+        # Replace code blocks with a placeholder for speech
+        speech_text = re.sub(
+            pattern, 
+            "I've included a code example in my response which you can see below.", 
+            text, 
+            flags=re.DOTALL
+        )
+        
+        return speech_text, code_blocks
+
     async def get_answer(self, question: str) -> Dict:
         """Process question and generate answer using predefined responses, RAG, and OpenAI."""
         logger.info(f"Processing question: {question}")
@@ -50,7 +75,7 @@ class QAPipeline:
         try:
             # ✅ Step 1: Check for predefined responses
             predefined_responses = {
-                "what is your name?": "I am the virtual model of Dr. Terry Soule, a Professor of Computer Science at the University of Idaho, where I also hold adjunct positions in Neuroscience and in Bioinformatics and Computational Biology. While my 3D visual model is still in development, I’m here to assist you verbally with computer science-related topics.",
+                "what is your name?": "I am the virtual model of Dr. Terry Soule, a Professor of Computer Science at the University of Idaho, where I also hold adjunct positions in Neuroscience and in Bioinformatics and Computational Biology. While my 3D visual model is still in development, I'm here to assist you verbally with computer science-related topics.",
                 "what do you do?": "I am the virtual model of Dr. Terry Soule, here to assist you with computer science-related topics. My 3D visual model is in progress, but right now, I am here to help you verbally.",
                 "tell me about yourself?": "I am the virtual model of Dr. Terry Soule, here to assist you with computer science-related topics. My 3D visual model is in progress, but right now, I am here to help you verbally."
             }
@@ -88,7 +113,7 @@ class QAPipeline:
                 logger.warning("No relevant context found in knowledge base")
                 return {
                     "question": question,
-                    "answer": "I don't have enough information in my knowledge base to answer this question. Please make sure lecture content has been loaded.",
+                    "answer": "I don't have enough information in my knowledge base to answer this question. Please make sure your question is related to Computer Science, as that's my area of expertise.",
                     "confidence_score": 0.0,
                     "sources": [],
                     "audio_url": None
@@ -97,32 +122,42 @@ class QAPipeline:
             # Join context
             context = "\n".join([doc["content"] for doc in context_docs])
             
+            # Use the updated system message from prompts.py
+            system_message = """You are a helpful Computer Science teaching assistant named Dr. Terry Soule. 
+ONLY answer questions related to Computer Science. If the question is about another field or topic that is not related to Computer Science, politely decline to answer.
+When providing code examples, focus on EXPLAINING the purpose and logic rather than just showing code. Break down complex code into understandable components and emphasize the thought process rather than syntax.
+Avoid presenting large blocks of code without explanation and explain code in natural language that doesn't "sound like code".
+When including code samples, use triple backticks and specify the language (e.g. ```java)."""
+            
             # Create messages using LangChain schema
             messages = [
-                SystemMessage(content="You are a helpful teaching assistant. Use the provided context to answer questions accurately and educationally."),
+                SystemMessage(content=system_message),
                 HumanMessage(content=f"Using this context:\n{context}\n\nAnswer this question: {question}")
             ]
 
             # Generate LLM response
             response = await self.llm.agenerate([messages])
             answer = response.generations[0][0].text
-
-            # Generate audio for LLM answer
+            
+            # Extract code blocks and prepare speech-friendly version
+            speech_text, code_blocks = self._extract_code_blocks(answer)
+            
+            # Generate audio for the speech-friendly version (without code blocks)
             try:
-                audio_file = await self.text_to_speech.convert(answer)
+                audio_file = await self.text_to_speech.convert(speech_text)
                 audio_url = f"/api/audio/responses/{audio_file.name}"
                 logger.info(f"Generated audio response: {audio_file}")
             except Exception as audio_error:
                 logger.error(f"Error generating audio: {audio_error}")
                 audio_url = None
 
-            # Prepare final result
+            # Prepare final result - use the original answer with code blocks
             result = {
                 "question": question,
-                "answer": answer,
+                "answer": answer,  # Keep code blocks in the text response
                 "sources": [doc["metadata"].get("source", "unknown") for doc in context_docs],
                 "confidence_score": self._calculate_confidence(context_docs, answer),
-                "audio_url": audio_url
+                "audio_url": audio_url  # Audio URL for the speech-friendly version
             }
             
             logger.info(f"Successfully generated answer with audio URL: {audio_url}")
@@ -132,7 +167,7 @@ class QAPipeline:
             logger.error(f"Error in get_answer: {str(e)}", exc_info=True)
             return {
                 "question": question,
-                "answer": "I encountered an error while processing your question. Please try again.",
+                "answer": "I encountered an error while processing your question. Please try again with a Computer Science related question.",
                 "confidence_score": 0.0,
                 "sources": [],
                 "audio_url": None

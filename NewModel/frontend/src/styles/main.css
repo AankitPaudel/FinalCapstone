@@ -169,9 +169,29 @@ body {
 
 /* Voice recorder visualization */
 .voice-visualization {
-    @apply flex items-end space-x-1 h-8;
+    min-width: 120px;
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 6px;
+    padding: 4px;
+    overflow: hidden;
 }
 
 .voice-bar {
-    @apply w-1 bg-blue-500 rounded-full transition-all duration-150;
+    transition: height 0.1s ease-in-out;
+    min-height: 3px;
+    transform-origin: bottom;
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scaleY(1);
+    }
+    50% {
+        transform: scaleY(1.05);
+    }
+}
+
+.dark .voice-visualization {
+    background-color: rgba(255, 255, 255, 0.05);
 }

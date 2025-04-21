@@ -1,0 +1,32 @@
+Welcome! I'm Terry Soule, and this is Programming Chaos, a channel devoted to programming projects that you can use to hone your programming skills. It's springtime as I'm recording this, so I thought I would do some procedurally generated flowers. It's always nice to have a way to add a little spot of color to your projects.
+
+I'm starting here with a bit of what I think of as processing boilerplate: the setup and draw functions, setting the size of the window, and switching to the hue, saturation, and brightness color mode, which will be handy for creating these flowers.
+
+To design the flowers, we have to think about how they are being drawn—what constructs a flower. You can look at the examples I have here or think about real flowers. In general, they're made up of a series of petals going around, often with more petals inside that. Think about flowers like daisies, sunflowers, or roses. While there are flowers that are less symmetric, we'll stick to symmetric rings of petals for our design.
+
+I want to start by drawing a single ring of petals. I'll do this as a ring of ellipses and represent it as a separate class, so each flower can be its own object, with its own parameters, to ensure that the flowers all look different. The question becomes: what parameters do our flowers need? If we're thinking about a ring of ellipses, there are a few basic parameters to consider: the number of petals in a ring, the petal color (hue), and the size of the petals (length and width). I'll use width as a fraction of length.
+
+These parameters will be the data members of our class: petal count, color, length, and width. Now that we have the data members defined, I'll create a constructor to assign them random values. I'll pick arbitrary random ranges to start with—this is something you can adjust if you'd like. The hue is a random value from 0 to 360 (covering the full color wheel). For petal count, I want multiples of four, so I generate a random integer between two and eight and multiply it by four, giving me between 8 and 32 petals. The petal length is a random value between 1 and 100, and the width is set to be between 20% and 50% of the length.
+
+With the data members initialized, the next step is to display the flowers. I'll outline the petals with a black stroke around the edges, which you can adjust if desired. I need to draw the ellipses in a circular arrangement. To do this, I'll use a for-loop to loop around the circle and rotate the coordinate system as I draw each petal. The rotation is determined by dividing the full circle (2π) by the number of petals, ensuring the petals are evenly spaced.
+
+The for-loop starts at an angle of 0 and progresses to 2π. Instead of using an integer counter, I’ll use a floating-point variable to calculate the rotation angle. Each petal is drawn as an ellipse, with its position determined by the rotation of the coordinate system. The petals are filled with bright, saturated colors, but you could experiment with duller colors if you prefer. The ellipses are centered at (0, 0), so when calling the flower function, I'll translate to the desired screen location. The rotation requires pushMatrix and popMatrix calls to save and restore the transformation matrix. The transformation matrix is pushed onto a stack before the rotation starts and popped off after drawing all the petals.
+
+Now, I can create a flower object using the constructor, which assigns it random parameters, and display it. I'll set the frame rate to one frame per second and generate a new random flower in each frame. The background will be cleared each time to better display the variety of flowers. After fixing a translation to draw each flower at the center of the screen, we have a working basic version of the flower.
+
+Initially, the petals are drawn as a ring centered at the origin. To create a more flower-like arrangement, I offset the petals outward along the x-axis. Using the petal length as the offset creates a good result, though slightly tighter spacing (e.g., 75% of the petal length) often looks better.
+
+Next, I want to add more rows of petals to create a fuller flower. These additional rows will get closer to the center of the flower and often have smaller petals. I add a new parameter, row count, to represent the number of rows of petals. This is set as a random integer between four and ten. The code for drawing one ring of petals is then nested inside another loop for the rows.
+
+To position the rows closer to the center, I adjust the petal size for each row. A variable, petalLen, is introduced to track the current length of the petals. Initially, it equals the petal length, but with each loop iteration, it is reduced by 10% (or 90% of its previous value). This creates a nice progression where the petals shrink toward the center. I fine-tuned the math further to ensure the rows are evenly spaced and fill the center effectively.
+
+Now, as we draw multiple rows with progressively smaller petals, the flower appears fuller and more natural. Any slight overlap or misalignment of the petals becomes less noticeable as additional rows are added.
+
+With this structure, we have a procedurally generated flower that updates every second, displaying the variety we can achieve with procedural generation. You can experiment with the random ranges for the parameters, adjust the colors, or modify the arrangement to create your own unique flowers.
+
+
+
+
+
+
+

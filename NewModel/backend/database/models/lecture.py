@@ -1,9 +1,7 @@
 # File: backend/database/models/lecture.py
 from sqlalchemy import Column, Integer, String, Text, DateTime
-from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime
-
-Base = declarative_base()
+from .base import Base
 
 class Lecture(Base):
     __tablename__ = "lectures"
