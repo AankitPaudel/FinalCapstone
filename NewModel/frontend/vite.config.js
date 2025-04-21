@@ -6,7 +6,8 @@ import path from 'path'
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: 3000,
+    port: 3001,
+    host: true, // This enables listening on all addresses
     proxy: {
       '/api': {
         target: 'http://localhost:8000',
