@@ -1,15 +1,21 @@
 // File: frontend/src/services/api.js
-const API_BASE_URL = 'http://localhost:8000/api';
+// Use environment variable from Vite or default to localhost:8000
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_PATH = '/api';
+const API_ENDPOINT = `${API_BASE_URL}${API_PATH}`;
+
+console.log('API Endpoint:', API_ENDPOINT);
 
 export const api = {
     async sendQuestion(question) {
         try {
-            const response = await fetch(`${API_BASE_URL}/qa/ask`, {
+            const response = await fetch(`${API_ENDPOINT}/qa/ask`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ question }),
+                credentials: 'include', // Include cookies for CORS with credentials
             });
 
             if (!response.ok) {
@@ -28,9 +34,10 @@ export const api = {
             const formData = new FormData();
             formData.append('audio', audioBlob, 'recording.wav');
 
-            const response = await fetch(`${API_BASE_URL}/audio/speech-to-text`, {
+            const response = await fetch(`${API_ENDPOINT}/audio/speech-to-text`, {
                 method: 'POST',
                 body: formData,
+                credentials: 'include', // Include cookies for CORS with credentials
             });
 
             if (!response.ok) {
@@ -46,12 +53,13 @@ export const api = {
 
     async getAudioResponse(text) {
         try {
-            const response = await fetch(`${API_BASE_URL}/audio/text-to-speech`, {
+            const response = await fetch(`${API_ENDPOINT}/audio/text-to-speech`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ text }),
+                credentials: 'include', // Include cookies for CORS with credentials
             });
 
             if (!response.ok) {
@@ -67,8 +75,9 @@ export const api = {
 
     async cleanupAudio() {
         try {
-            const response = await fetch(`${API_BASE_URL}/audio/cleanup`, {
+            const response = await fetch(`${API_ENDPOINT}/audio/cleanup`, {
                 method: 'POST',
+                credentials: 'include', // Include cookies for CORS with credentials
             });
 
             if (!response.ok) {

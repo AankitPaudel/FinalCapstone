@@ -5,7 +5,7 @@ import logging
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from api.routes import audio, qa, lectures, auth
+from api.routes import audio, qa, lectures, auth, feedback, profile
 
 # Add the backend directory to Python path
 backend_dir = Path(__file__).parent.parent
@@ -21,7 +21,11 @@ app = FastAPI(title="Virtual Teacher API")
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=[
+        "http://localhost:3000", 
+        "http://localhost:3001",
+        "http://frontend:3001"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -48,6 +52,8 @@ app.include_router(qa.router, prefix="/api/qa", tags=["qa"])
 app.include_router(audio.router, prefix="/api/audio", tags=["audio"])
 app.include_router(lectures.router, prefix="/api/lectures", tags=["lectures"])
 app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
+app.include_router(feedback.router, prefix="/api/feedback", tags=["feedback"])
+app.include_router(profile.router, prefix="/api/profile", tags=["profile"])
 
 @app.get("/")
 async def root():

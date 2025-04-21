@@ -17,6 +17,9 @@ services:
       - ../backend/data/vector_store:/app/data/vector_store
     depends_on:
       - db
+    networks:
+      - app-network
+    hostname: backend
 
   frontend:
     build:
@@ -25,9 +28,12 @@ services:
     ports:
       - "3001:3001"
     environment:
-      - VITE_API_URL=http://localhost:8000
+      - VITE_API_URL=http://backend:8000
     depends_on:
       - backend
+    networks:
+      - app-network
+    hostname: frontend
 
   db:
     image: postgres:13
@@ -39,6 +45,13 @@ services:
       - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    networks:
+      - app-network
+    hostname: db
 
 volumes:
   postgres_data:
+
+networks:
+  app-network:
+    driver: bridge
