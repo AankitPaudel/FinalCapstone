@@ -49,10 +49,6 @@ __pycache__/
 *$py.class
 *.so
 
-# Keep all lecture files
-!data/lectures/
-!data/lectures/*.txt
-
 # Node.js
 node_modules/
 npm-debug.log
@@ -61,12 +57,16 @@ yarn-error.log
 .pnpm-debug.log
 
 # Audio files - but keep the directory structure
-data/audio/responses/*.mp3
-!data/audio/responses/.gitkeep
+NewModel/backend/data/audio/responses/*.mp3
+!NewModel/backend/data/audio/responses/.gitkeep
+
+# Keep all lecture files
+!NewModel/backend/data/lectures/
+!NewModel/backend/data/lectures/*.txt
 
 # Vector store - keep directory structure
-data/vector_store/*
-!data/vector_store/.gitkeep
+NewModel/backend/data/vector_store/*
+!NewModel/backend/data/vector_store/.gitkeep
 
 # VS Code
 .vscode/
