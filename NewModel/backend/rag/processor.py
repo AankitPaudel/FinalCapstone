@@ -1,8 +1,8 @@
 # File: backend/rag/processor.py
 import logging
-from langchain.embeddings import OpenAIEmbeddings
+from langchain_openai import OpenAIEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.vectorstores import Chroma
+from langchain_chroma import Chroma
 from app.config import settings
 import os
 
