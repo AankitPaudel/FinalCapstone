@@ -74,12 +74,10 @@ class RAGProcessor:
                 logger.warning("Vector store is empty - no lectures loaded")
                 return []
 
-            # Perform similarity search with optimized settings
+            # Perform similarity search with only the basic parameters
             results = self.vector_store.similarity_search(
                 question,
-                k=num_chunks,  # Reduced from 3 → 2 for faster lookup
-                fetch_k=5,  # Fetch more but return the top matches
-                score_threshold=0.2  # Ignore very weak matches
+                k=num_chunks  # Reduced from 3 → 2 for faster lookup
             )
 
             # Format results
